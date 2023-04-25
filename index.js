@@ -17,7 +17,21 @@ app.post('/submit', (req, res) => {
 
     console.log(`Name: ${name}, Email: ${email}, Registration Number: ${RegNo}`);
 
-    res.send(`Name: ${name}, Email: ${email}, Registration Number: ${RegNo}`);
+  res.send(`
+    <h1>Data Received:</h1>
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Registration Number</th>
+      </tr>
+      <tr>
+        <td>${name}</td>
+        <td>${email}</td>
+        <td>${RegNo}</td>
+      </tr>
+    </table>
+  `);
 });
 
 
