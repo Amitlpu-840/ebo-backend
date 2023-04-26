@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const fs = require('fs');
 
 const app = express();
 const port = 3000;
@@ -11,30 +12,28 @@ app.get('/', (req, res) => {
 });
 
 app.post('/submit', (req, res) => {
-    const name = req.body.name;
-    const email = req.body.email;
-    const RegNo = req.body.reg_num;
+  const name = req.body.name;
+  const email = req.body.email;
+  const RegNo = req.body.reg_num;
 
-    console.log(`Name: ${name}, Email: ${email}, Registration Number: ${RegNo}`);
+  console.log(`Name: ${name}, Email: ${email}, Registration Number: ${RegNo}`);
 
-  res.send(`
-    <h1>Data Received:</h1>
-    <table>
-      <tr>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Registration Number</th>
-      </tr>
-      <tr>
-        <td>${name}</td>
-        <td>${email}</td>
-        <td>${RegNo}</td>
-      </tr>
-    </table>
-  `);
+  fs.readFile(__dirname + '/dataReceived.html', 'utf8', (err, data) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send('Internal Server Error');
+      return;
+    }
+
+    const replacedData = data
+      .replace('{{name}}', name)
+      .replace('{{email}}', email)
+      .replace('{{regNum}}', RegNo);
+
+    res.send(replacedData);
+  });
 });
 
-
 app.listen(port, () => {
-    console.log(`Server listening on port ${port}`);
+  console.log(`Server listening on port ${port}`);
 });
